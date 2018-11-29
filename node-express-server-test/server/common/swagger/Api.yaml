@@ -1,0 +1,99 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: node-server api test
+  description: apiテスト
+basePath: /api/v1
+tags:
+  - name: test
+    description: APIテスト
+  - name: Specification
+    description: The swagger API specification
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+
+definitions:
+  Person:
+    type: object
+    properties:
+      firstName:
+        type: string
+        example: 太郎
+      lastName:
+        type: string
+        example: 試験
+      age:
+        type: integer
+        example: 20
+  Persons:
+    type: array
+    items: 
+      $ref: "#/definitions/Person"
+
+paths:
+  /persons:
+    get:
+      tags:
+        - test
+      summary: 全ユーザー情報
+      description: すべてのユーザー取得
+      responses:
+        200:
+          description: 全ユーザーリストを返す
+          schema:
+            type: object
+            properties:
+              Persons:
+                $ref: "#/definitions/Persons"                
+    post:
+      tags:
+        - test
+      summary: ユーザー生成
+      description: ユーザー生成
+      parameters:
+        - name: body
+          in: body
+          description: 試験用データ
+          required: true
+          schema: 
+            $ref: "#/definitions/Person"
+      responses:
+        201:
+          description: 生成されたユーザーを返す。。はず
+        500:
+          description: 内部エラー
+
+  /persons/{id}:
+    get:
+      tags:
+        - test
+      summary: 特定ユーザー情報
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ユーザーPrimaryKey
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: 成功時のレスポンス
+          schema:
+            type: object
+            properties:
+              Person:
+                $ref: "#/definitions/Person"
+        404:
+          description: Example not found
+
+  /spec:
+    get:
+      tags:
+        - Specification
+      responses:
+        200:
+          description: Return the API specification
